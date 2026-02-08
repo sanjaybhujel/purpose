@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sanjay ❤️ Bibhusha</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Comic Sans MS', cursive;
+  overflow: hidden;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 22px;
+  text-align: center;
+  width: 92%;
+  max-width: 360px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
+
+.name {
+  font-size: 28px;
+  font-weight: bold;
+  color: #ff4d6d;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px #ff7eb3; }
+  to { text-shadow: 0 0 15px #ff4d6d; }
+}
+
+img {
+  width: 100%;
+  border-radius: 15px;
+  margin: 12px 0;
+}
+
+p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.4;
+}
+
+button {
+  padding: 12px 22px;
+  border: none;
+  border-radius: 25px;
+  font-size: 15px;
+  margin: 8px;
+  cursor: pointer;
+}
+
+#yesBtn {
+  background: #ff4d6d;
+  color: white;
+}
+
+#noBtn {
+  background: #ddd;
+  position: absolute;
+}
+
+.lock {
+  text-align: center;
+}
+
+input {
+  padding: 10px;
+  width: 80%;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  text-align: center;
+  font-size: 16px;
+}
+
+.hearts span {
+  position: absolute;
+  font-size: 22px;
+  animation: float 4s linear infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-700px); opacity: 0; }
+}
+
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.ring {
+  font-size: 60px;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎶 Music (plays after first tap) -->
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- 🔒 PASSWORD LOCK -->
+<div class="card lock" id="lockScreen">
+  <h2>🔒 A Little Secret</h2>
+  <p>Hint: What do I call you? 💖</p>
+  <input type="password" id="password" placeholder="Enter password">
+  <br><br>
+  <button onclick="unlock()">Unlock 💌</button>
+</div>
+
+<!-- 💖 MAIN CONTENT -->
+<div class="card" id="mainCard" style="display:none;">
+  <div class="name">Bibhusha 💕</div>
+
+  <img src="photo.jpg" alt="Us Together">
+
+  <p>
+    Every heartbeat of mine whispers your name ✨<br>
+    Will you be my Valentine? 💖
+  </p>
+
+  <button id="yesBtn" onclick="sayYes()">Yes 💖</button>
+  <button id="noBtn" onmouseover="moveNo()">No 😜</button>
+</div>
+
+<!-- 💍 RING POPUP -->
+<div class="popup" id="ringPopup">
+  <div class="popup-content">
+    <div class="ring">💍</div>
+    <h2>Forever?</h2>
+    <p>I choose you. Always.</p>
+  </div>
+</div>
+
+<div class="hearts"></div>
+
+<script>
+const correctPassword = "bibhusha"; // lowercase on purpose
+const music = document.getElementById("bgMusic");
+const hearts = document.querySelector(".hearts");
+
+function unlock() {
+  const input = document.getElementById("password").value.toLowerCase();
+  if (input === correctPassword) {
+    document.getElementById("lockScreen").style.display = "none";
+    document.getElementById("mainCard").style.display = "block";
+    music.play();
+  } else {
+    alert("Hmm… try again 😏");
+  }
+}
+
+function moveNo() {
+  const noBtn = document.getElementById("noBtn");
+  noBtn.style.left = Math.random() * 200 + "px";
+  noBtn.style.top = Math.random() * 200 + "px";
+}
+
+function sayYes() {
+  document.getElementById("mainCard").innerHTML = `
+    <h2>She Said YES 💖</h2>
+    <p>Sanjay is officially the luckiest guy alive 🥰</p>
+  `;
+  createHearts();
+  setTimeout(() => {
+    document.getElementById("ringPopup").style.display = "flex";
+  }, 2500);
+}
+
+function createHearts() {
+  for (let i = 0; i < 35; i++) {
+    const heart = document.createElement("span");
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.bottom = "0px";
+    hearts.appendChild(heart);
+    setTimeout(() => heart.remove(), 4000);
+  }
+}
+</script>
+
+</body>
+</html>3:29 PM 2/6/2026
