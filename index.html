@@ -3,23 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Sanjay ❤️ Bibhusha</title>
 
 <style>
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   margin: 0;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(135deg, #ff758c, #ff7eb3);
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Comic Sans MS', cursive;
   overflow: hidden;
+  padding: 10px;
+  transition: background 1.5s ease;
+}
+
+/* 🌙 Proposal mode */
+body.proposal {
+  background: radial-gradient(circle at top, #2b1055, #000);
 }
 
 .card {
@@ -27,13 +34,20 @@ body {
   padding: 20px;
   border-radius: 22px;
   text-align: center;
-  width: 92%;
+  width: 100%;
   max-width: 360px;
   box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  position: relative;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .name {
-  font-size: 28px;
+  font-size: clamp(22px, 6vw, 28px);
   font-weight: bold;
   color: #ff4d6d;
   animation: glow 2s infinite alternate;
@@ -41,68 +55,92 @@ body {
 
 @keyframes glow {
   from { text-shadow: 0 0 5px #ff7eb3; }
-  to { text-shadow: 0 0 15px #ff4d6d; }
+  to { text-shadow: 0 0 18px #ff4d6d; }
 }
 
 img {
   width: 100%;
+  max-height: 260px;
+  object-fit: cover;
   border-radius: 15px;
   margin: 12px 0;
 }
 
 p {
-  font-size: 16px;
+  font-size: clamp(14px, 4vw, 16px);
   color: #555;
-  line-height: 1.4;
+  line-height: 1.6;
 }
 
 button {
-  padding: 12px 22px;
+  padding: 14px 26px;
   border: none;
-  border-radius: 25px;
-  font-size: 15px;
+  border-radius: 30px;
+  font-size: 16px;
   margin: 8px;
   cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.95);
 }
 
 #yesBtn {
   background: #ff4d6d;
   color: white;
+  box-shadow: 0 8px 18px rgba(255,77,109,0.4);
 }
 
 #noBtn {
   background: #ddd;
   position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.lock {
-  text-align: center;
-}
-
-input {
-  padding: 10px;
-  width: 80%;
+.lock input {
+  padding: 12px;
+  width: 90%;
   border-radius: 20px;
   border: 1px solid #ccc;
   text-align: center;
   font-size: 16px;
 }
 
+/* ❤️ Floating hearts */
 .hearts span {
-  position: absolute;
+  position: fixed;
   font-size: 22px;
-  animation: float 4s linear infinite;
+  animation: float 4s linear forwards;
+  pointer-events: none;
 }
 
 @keyframes float {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-700px); opacity: 0; }
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-100vh); opacity: 0; }
 }
 
+/* 🎉 Confetti */
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 12px;
+  top: -10px;
+  animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* 💍 Popup */
 .popup {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.65);
   display: none;
   justify-content: center;
   align-items: center;
@@ -113,7 +151,7 @@ input {
   padding: 25px;
   border-radius: 20px;
   width: 90%;
-  max-width: 300px;
+  max-width: 320px;
   text-align: center;
 }
 
@@ -123,21 +161,18 @@ input {
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
   50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎶 Music (plays after first tap) -->
 <audio id="bgMusic" loop>
-  <source src="https://github.com/sanjaybhujel/purpose/blob/main/music.mp3" type="audio/mpeg">
+  <source src="https://raw.githubusercontent.com/sanjaybhujel/purpose/main/music.mp3" type="audio/mpeg">
 </audio>
 
-<!-- 🔒 PASSWORD LOCK -->
+<!-- 🔒 LOCK -->
 <div class="card lock" id="lockScreen">
   <h2>🔒 A Little Secret</h2>
   <p>Hint: What do I call you? 💖</p>
@@ -146,11 +181,11 @@ input {
   <button onclick="unlock()">Unlock 💌</button>
 </div>
 
-<!-- 💖 MAIN CONTENT -->
+<!-- 💖 MAIN -->
 <div class="card" id="mainCard" style="display:none;">
   <div class="name">Bibhusha 💕</div>
 
-  <img src="https://github.com/sanjaybhujel/purpose/blob/main/photo.jpg" alt="Us Together">
+  <img src="https://raw.githubusercontent.com/sanjaybhujel/purpose/main/photo.jpg">
 
   <p>
     Every heartbeat of mine whispers your name ✨<br>
@@ -158,67 +193,109 @@ input {
   </p>
 
   <button id="yesBtn" onclick="sayYes()">Yes 💖</button>
-  <button id="noBtn" onmouseover="moveNo()">No 😜</button>
+  <button id="noBtn">No 😜</button>
 </div>
 
-<!-- 💍 RING POPUP -->
+<!-- 💍 PROPOSAL POPUP -->
 <div class="popup" id="ringPopup">
   <div class="popup-content">
     <div class="ring">💍</div>
-    <h2>Forever?</h2>
-    <p>I choose you. Always.</p>
+    <h2>Bibhusha…</h2>
+    <p id="letter"></p>
   </div>
 </div>
 
 <div class="hearts"></div>
 
 <script>
-const correctPassword = "babe"; // lowercase on purpose
+const correctPassword = "babe";
 const music = document.getElementById("bgMusic");
 const hearts = document.querySelector(".hearts");
+const noBtn = document.getElementById("noBtn");
+const card = document.getElementById("mainCard");
+
+const letterText = 
+`From the moment you walked into my life,
+everything changed.
+
+Your smile became my peace,
+your voice my favorite sound,
+your presence my home.
+
+I don’t want perfect days —
+I want every day with you.
+
+Will you walk with me,
+hand in hand,
+forever? 💍`;
 
 function unlock() {
   const input = document.getElementById("password").value.toLowerCase();
   if (input === correctPassword) {
     document.getElementById("lockScreen").style.display = "none";
-    document.getElementById("mainCard").style.display = "block";
-    music.play();
+    card.style.display = "block";
+    music.volume = 0.7;
+    music.play().catch(() => {});
   } else {
-    alert("Hmm… try again 😏");
+    document.querySelector(".lock p").innerText =
+      "Hmm… that’s not it 😏 Try again 💕";
   }
 }
 
 function moveNo() {
-  const noBtn = document.getElementById("noBtn");
-  noBtn.style.left = Math.random() * 200 + "px";
-  noBtn.style.top = Math.random() * 200 + "px";
+  const r = card.getBoundingClientRect();
+  noBtn.style.left = Math.random() * (r.width - 80) + "px";
+  noBtn.style.top = Math.random() * (r.height - 50) + "px";
 }
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
 
 function sayYes() {
-  document.getElementById("mainCard").innerHTML = `
-    <h2>She Said YES 💖</h2>
-    <p>Sanjay is officially the luckiest guy alive 🥰</p>
-  `;
+  document.body.classList.add("proposal");
+  card.innerHTML = `<h2>She Said YES 💖</h2><p>Sanjay is the luckiest man alive 🥰</p>`;
   createHearts();
-  setTimeout(() => {
-    document.getElementById("ringPopup").style.display = "flex";
-  }, 2500);
+  confettiBlast();
+  setTimeout(showProposal, 2500);
 }
 
 function createHearts() {
-  for (let i = 0; i < 35; i++) {
-    const heart = document.createElement("span");
-    heart.innerHTML = "💖";
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.bottom = "0px";
-    hearts.appendChild(heart);
-    setTimeout(() => heart.remove(), 4000);
+  for (let i = 0; i < 40; i++) {
+    const h = document.createElement("span");
+    h.innerHTML = "💖";
+    h.style.left = Math.random() * innerWidth + "px";
+    h.style.bottom = "-20px";
+    hearts.appendChild(h);
+    setTimeout(() => h.remove(), 4000);
   }
+}
+
+function confettiBlast() {
+  for (let i = 0; i < 120; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background =
+      `hsl(${Math.random()*360},100%,60%)`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+  }
+}
+
+function showProposal() {
+  document.getElementById("ringPopup").style.display = "flex";
+  typeLetter();
+}
+
+function typeLetter() {
+  const el = document.getElementById("letter");
+  let i = 0;
+  const timer = setInterval(() => {
+    el.innerHTML += letterText[i];
+    i++;
+    if (i >= letterText.length) clearInterval(timer);
+  }, 40);
 }
 </script>
 
 </body>
-
-</html>3:29 PM 2/6/2026
-
-
+</html>
